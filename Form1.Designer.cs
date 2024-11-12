@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             COM_comboBox = new ComboBox();
             openPortButton = new Button();
@@ -35,7 +36,7 @@
             baudRate_comboBox = new ComboBox();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
-            button1 = new Button();
+            setZero_button = new Button();
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
@@ -81,6 +82,11 @@
             label21 = new Label();
             label22 = new Label();
             qualityJudge_textBox = new TextBox();
+            average_textBox = new TextBox();
+            variance_textBox = new TextBox();
+            timer1 = new System.Windows.Forms.Timer(components);
+            label23 = new Label();
+            help_button = new Button();
             statusStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -93,7 +99,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 17);
+            label1.Location = new Point(12, 16);
             label1.Name = "label1";
             label1.Size = new Size(62, 17);
             label1.TabIndex = 0;
@@ -109,7 +115,7 @@
             // 
             // openPortButton
             // 
-            openPortButton.Location = new Point(389, 14);
+            openPortButton.Location = new Point(389, 13);
             openPortButton.Name = "openPortButton";
             openPortButton.Size = new Size(75, 23);
             openPortButton.TabIndex = 2;
@@ -120,7 +126,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(188, 17);
+            label2.Location = new Point(188, 16);
             label2.Name = "label2";
             label2.Size = new Size(56, 17);
             label2.TabIndex = 3;
@@ -148,14 +154,15 @@
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(0, 17);
             // 
-            // button1
+            // setZero_button
             // 
-            button1.Location = new Point(13, 75);
-            button1.Name = "button1";
-            button1.Size = new Size(143, 23);
-            button1.TabIndex = 6;
-            button1.Text = "将当前读数设为零点";
-            button1.UseVisualStyleBackColor = true;
+            setZero_button.Location = new Point(13, 81);
+            setZero_button.Name = "setZero_button";
+            setZero_button.Size = new Size(143, 23);
+            setZero_button.TabIndex = 6;
+            setZero_button.Text = "将当前读数设为零点";
+            setZero_button.UseVisualStyleBackColor = true;
+            setZero_button.Click += setZero_button_Click;
             // 
             // label3
             // 
@@ -178,7 +185,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(30, 19);
+            label5.Location = new Point(30, 18);
             label5.Name = "label5";
             label5.Size = new Size(32, 17);
             label5.TabIndex = 9;
@@ -207,24 +214,27 @@
             zero_textBox1.Name = "zero_textBox1";
             zero_textBox1.Size = new Size(50, 17);
             zero_textBox1.TabIndex = 10;
+            zero_textBox1.TextAlign = HorizontalAlignment.Right;
             // 
             // current_textBox1
             // 
-            current_textBox1.Location = new Point(68, 33);
+            current_textBox1.Location = new Point(68, 36);
             current_textBox1.MaximumSize = new Size(50, 17);
             current_textBox1.MinimumSize = new Size(40, 17);
             current_textBox1.Name = "current_textBox1";
             current_textBox1.Size = new Size(50, 17);
             current_textBox1.TabIndex = 10;
+            current_textBox1.TextAlign = HorizontalAlignment.Right;
             // 
             // diff_textBox1
             // 
-            diff_textBox1.Location = new Point(68, 16);
+            diff_textBox1.Location = new Point(68, 18);
             diff_textBox1.MaximumSize = new Size(50, 17);
             diff_textBox1.MinimumSize = new Size(40, 0);
             diff_textBox1.Name = "diff_textBox1";
             diff_textBox1.Size = new Size(50, 17);
             diff_textBox1.TabIndex = 10;
+            diff_textBox1.TextAlign = HorizontalAlignment.Right;
             // 
             // groupBox2
             // 
@@ -249,29 +259,32 @@
             zero_textBox2.Name = "zero_textBox2";
             zero_textBox2.Size = new Size(50, 17);
             zero_textBox2.TabIndex = 10;
+            zero_textBox2.TextAlign = HorizontalAlignment.Right;
             // 
             // current_textBox2
             // 
-            current_textBox2.Location = new Point(68, 33);
+            current_textBox2.Location = new Point(68, 36);
             current_textBox2.MaximumSize = new Size(50, 17);
             current_textBox2.MinimumSize = new Size(40, 17);
             current_textBox2.Name = "current_textBox2";
             current_textBox2.Size = new Size(50, 17);
             current_textBox2.TabIndex = 10;
+            current_textBox2.TextAlign = HorizontalAlignment.Right;
             // 
             // diff_textBox2
             // 
-            diff_textBox2.Location = new Point(68, 16);
+            diff_textBox2.Location = new Point(68, 18);
             diff_textBox2.MaximumSize = new Size(50, 17);
             diff_textBox2.MinimumSize = new Size(40, 0);
             diff_textBox2.Name = "diff_textBox2";
             diff_textBox2.Size = new Size(50, 17);
             diff_textBox2.TabIndex = 10;
+            diff_textBox2.TextAlign = HorizontalAlignment.Right;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(30, 19);
+            label6.Location = new Point(30, 18);
             label6.Name = "label6";
             label6.Size = new Size(32, 17);
             label6.TabIndex = 9;
@@ -308,7 +321,7 @@
             groupBox3.Size = new Size(139, 76);
             groupBox3.TabIndex = 10;
             groupBox3.TabStop = false;
-            groupBox3.Text = "传感器1";
+            groupBox3.Text = "传感器3";
             // 
             // zero_textBox3
             // 
@@ -318,29 +331,32 @@
             zero_textBox3.Name = "zero_textBox3";
             zero_textBox3.Size = new Size(50, 17);
             zero_textBox3.TabIndex = 10;
+            zero_textBox3.TextAlign = HorizontalAlignment.Right;
             // 
             // current_textBox3
             // 
-            current_textBox3.Location = new Point(68, 33);
+            current_textBox3.Location = new Point(68, 36);
             current_textBox3.MaximumSize = new Size(50, 17);
             current_textBox3.MinimumSize = new Size(40, 17);
             current_textBox3.Name = "current_textBox3";
             current_textBox3.Size = new Size(50, 17);
             current_textBox3.TabIndex = 10;
+            current_textBox3.TextAlign = HorizontalAlignment.Right;
             // 
             // diff_textBox3
             // 
-            diff_textBox3.Location = new Point(68, 16);
+            diff_textBox3.Location = new Point(68, 18);
             diff_textBox3.MaximumSize = new Size(50, 17);
             diff_textBox3.MinimumSize = new Size(40, 0);
             diff_textBox3.Name = "diff_textBox3";
             diff_textBox3.Size = new Size(50, 17);
             diff_textBox3.TabIndex = 10;
+            diff_textBox3.TextAlign = HorizontalAlignment.Right;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(30, 19);
+            label9.Location = new Point(30, 18);
             label9.Name = "label9";
             label9.Size = new Size(32, 17);
             label9.TabIndex = 9;
@@ -377,7 +393,7 @@
             groupBox4.Size = new Size(139, 76);
             groupBox4.TabIndex = 10;
             groupBox4.TabStop = false;
-            groupBox4.Text = "传感器1";
+            groupBox4.Text = "传感器4";
             // 
             // zero_textBox4
             // 
@@ -387,24 +403,27 @@
             zero_textBox4.Name = "zero_textBox4";
             zero_textBox4.Size = new Size(50, 17);
             zero_textBox4.TabIndex = 10;
+            zero_textBox4.TextAlign = HorizontalAlignment.Right;
             // 
             // current_textBox4
             // 
-            current_textBox4.Location = new Point(68, 33);
+            current_textBox4.Location = new Point(68, 36);
             current_textBox4.MaximumSize = new Size(50, 17);
             current_textBox4.MinimumSize = new Size(40, 17);
             current_textBox4.Name = "current_textBox4";
             current_textBox4.Size = new Size(50, 17);
             current_textBox4.TabIndex = 10;
+            current_textBox4.TextAlign = HorizontalAlignment.Right;
             // 
             // diff_textBox4
             // 
-            diff_textBox4.Location = new Point(68, 16);
+            diff_textBox4.Location = new Point(68, 19);
             diff_textBox4.MaximumSize = new Size(50, 17);
             diff_textBox4.MinimumSize = new Size(40, 0);
             diff_textBox4.Name = "diff_textBox4";
             diff_textBox4.Size = new Size(50, 17);
             diff_textBox4.TabIndex = 10;
+            diff_textBox4.TextAlign = HorizontalAlignment.Right;
             // 
             // label12
             // 
@@ -446,7 +465,7 @@
             groupBox5.Size = new Size(139, 76);
             groupBox5.TabIndex = 10;
             groupBox5.TabStop = false;
-            groupBox5.Text = "传感器1";
+            groupBox5.Text = "传感器5";
             // 
             // zero_textBox5
             // 
@@ -456,24 +475,27 @@
             zero_textBox5.Name = "zero_textBox5";
             zero_textBox5.Size = new Size(50, 17);
             zero_textBox5.TabIndex = 10;
+            zero_textBox5.TextAlign = HorizontalAlignment.Right;
             // 
             // current_textBox5
             // 
-            current_textBox5.Location = new Point(68, 33);
+            current_textBox5.Location = new Point(68, 36);
             current_textBox5.MaximumSize = new Size(50, 17);
             current_textBox5.MinimumSize = new Size(40, 17);
             current_textBox5.Name = "current_textBox5";
             current_textBox5.Size = new Size(50, 17);
             current_textBox5.TabIndex = 10;
+            current_textBox5.TextAlign = HorizontalAlignment.Right;
             // 
             // diff_textBox5
             // 
-            diff_textBox5.Location = new Point(68, 16);
+            diff_textBox5.Location = new Point(68, 19);
             diff_textBox5.MaximumSize = new Size(50, 17);
             diff_textBox5.MinimumSize = new Size(40, 0);
             diff_textBox5.Name = "diff_textBox5";
             diff_textBox5.Size = new Size(50, 17);
             diff_textBox5.TabIndex = 10;
+            diff_textBox5.TextAlign = HorizontalAlignment.Right;
             // 
             // label15
             // 
@@ -515,7 +537,7 @@
             groupBox6.Size = new Size(139, 76);
             groupBox6.TabIndex = 10;
             groupBox6.TabStop = false;
-            groupBox6.Text = "传感器1";
+            groupBox6.Text = "传感器6";
             // 
             // zero_textBox6
             // 
@@ -525,24 +547,27 @@
             zero_textBox6.Name = "zero_textBox6";
             zero_textBox6.Size = new Size(50, 17);
             zero_textBox6.TabIndex = 10;
+            zero_textBox6.TextAlign = HorizontalAlignment.Right;
             // 
             // current_textBox6
             // 
-            current_textBox6.Location = new Point(68, 33);
+            current_textBox6.Location = new Point(68, 36);
             current_textBox6.MaximumSize = new Size(50, 17);
             current_textBox6.MinimumSize = new Size(40, 17);
             current_textBox6.Name = "current_textBox6";
             current_textBox6.Size = new Size(50, 17);
             current_textBox6.TabIndex = 10;
+            current_textBox6.TextAlign = HorizontalAlignment.Right;
             // 
             // diff_textBox6
             // 
-            diff_textBox6.Location = new Point(68, 16);
+            diff_textBox6.Location = new Point(68, 19);
             diff_textBox6.MaximumSize = new Size(50, 17);
             diff_textBox6.MinimumSize = new Size(40, 0);
             diff_textBox6.Name = "diff_textBox6";
             diff_textBox6.Size = new Size(50, 17);
             diff_textBox6.TabIndex = 10;
+            diff_textBox6.TextAlign = HorizontalAlignment.Right;
             // 
             // label18
             // 
@@ -574,34 +599,85 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(19, 323);
+            label21.Font = new Font("Microsoft YaHei UI", 15F);
+            label21.Location = new Point(19, 325);
             label21.Name = "label21";
-            label21.Size = new Size(80, 17);
+            label21.Size = new Size(132, 27);
             label21.TabIndex = 11;
             label21.Text = "差值的平均值";
             // 
             // label22
             // 
             label22.AutoSize = true;
-            label22.Location = new Point(31, 340);
+            label22.Font = new Font("Microsoft YaHei UI", 15F);
+            label22.Location = new Point(39, 355);
             label22.Name = "label22";
-            label22.Size = new Size(68, 17);
+            label22.Size = new Size(112, 27);
             label22.TabIndex = 11;
             label22.Text = "差值的方差";
             // 
             // qualityJudge_textBox
             // 
-            qualityJudge_textBox.Location = new Point(332, 305);
+            qualityJudge_textBox.Location = new Point(332, 291);
             qualityJudge_textBox.Multiline = true;
             qualityJudge_textBox.Name = "qualityJudge_textBox";
             qualityJudge_textBox.Size = new Size(152, 89);
             qualityJudge_textBox.TabIndex = 12;
+            // 
+            // average_textBox
+            // 
+            average_textBox.Font = new Font("Microsoft YaHei UI", 15F);
+            average_textBox.Location = new Point(157, 326);
+            average_textBox.MaximumSize = new Size(80, 24);
+            average_textBox.MinimumSize = new Size(80, 24);
+            average_textBox.Name = "average_textBox";
+            average_textBox.Size = new Size(80, 24);
+            average_textBox.TabIndex = 13;
+            average_textBox.TextAlign = HorizontalAlignment.Right;
+            // 
+            // variance_textBox
+            // 
+            variance_textBox.Font = new Font("Microsoft YaHei UI", 15F);
+            variance_textBox.Location = new Point(157, 356);
+            variance_textBox.MaximumSize = new Size(80, 24);
+            variance_textBox.MinimumSize = new Size(80, 24);
+            variance_textBox.Name = "variance_textBox";
+            variance_textBox.Size = new Size(80, 24);
+            variance_textBox.TabIndex = 13;
+            variance_textBox.TextAlign = HorizontalAlignment.Right;
+            // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new Point(308, 383);
+            label23.Name = "label23";
+            label23.Size = new Size(200, 17);
+            label23.TabIndex = 14;
+            label23.Text = "Developed By HKUST(GZ) MDMF";
+            // 
+            // help_button
+            // 
+            help_button.Location = new Point(13, 44);
+            help_button.Name = "help_button";
+            help_button.Size = new Size(118, 23);
+            help_button.TabIndex = 15;
+            help_button.Text = "如何查看COM号？";
+            help_button.UseVisualStyleBackColor = true;
+            help_button.Click += help_button_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(510, 428);
+            Controls.Add(help_button);
+            Controls.Add(label23);
+            Controls.Add(variance_textBox);
+            Controls.Add(average_textBox);
             Controls.Add(qualityJudge_textBox);
             Controls.Add(label22);
             Controls.Add(label21);
@@ -611,7 +687,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox4);
             Controls.Add(groupBox1);
-            Controls.Add(button1);
+            Controls.Add(setZero_button);
             Controls.Add(statusStrip1);
             Controls.Add(baudRate_comboBox);
             Controls.Add(label2);
@@ -649,7 +725,7 @@
         private ComboBox baudRate_comboBox;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
-        private Button button1;
+        private Button setZero_button;
         private Label label3;
         private Label label4;
         private Label label5;
@@ -695,5 +771,10 @@
         private Label label21;
         private Label label22;
         private TextBox qualityJudge_textBox;
+        private TextBox average_textBox;
+        private TextBox variance_textBox;
+        private System.Windows.Forms.Timer timer1;
+        private Label label23;
+        private Button help_button;
     }
 }
