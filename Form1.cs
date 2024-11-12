@@ -1,14 +1,18 @@
+using System.IO;
 using System.IO.Ports;
+using System.Text;
 namespace LaserDistance
 {
     public partial class Form1 : Form
     {
+        static readonly byte[] getDistance = { 0x01, 0x04, 0x00, 0x00, 0x00, 0x02 };
         SerialPort? port;
         float[] zero = new float[6];
         float[] dist = new float[6];
         float[] diff = new float[6];
 
         float sum = 0.0f, average = 0.0f, variance = 0.0f, varianceSum = 0.0f;
+        float qualityControl1 = 0.01f, qualityControl2 = 0.02f;
 
         bool isZeroSet = false;
         public Form1()
@@ -37,12 +41,35 @@ namespace LaserDistance
             baudRate_comboBox.Items.Add("230400");
             baudRate_comboBox.SelectedIndex = 5;
 
-            qualityJudge_textBox.Text = "方差与品质：\r\n    0~0.2: 好\r\n 0.2~0.5: 中等\r\n      >0.5: 差";
-
             timer1.Interval = 500;
             timer1.Enabled = true;
             timer1.Start();
             timer1.Tick += new EventHandler(timer1_Tick);
+
+            toolTip1.SetToolTip(baudRate_label, "如果不知道要不要改波特率，那就保持默认值115200");
+
+            string filepath = Environment.CurrentDirectory + "qualityControl.txt";
+            try
+            {
+                string[] readText = File.ReadAllLines(filepath, Encoding.UTF8);
+                if (readText.Length == 2)
+                {
+                    float.TryParse(readText[0], out qualityControl1);
+                    float.TryParse(readText[1], out qualityControl2);
+                    quality_label1.Text = "0.000~" + qualityControl1.ToString("F3") + ": 好";
+                    quality_label2.Text = qualityControl1.ToString("F3") + "~" + qualityControl2.ToString("F3") + ": 中";
+                    quality_label3.Text = "          >" + qualityControl2.ToString("F3") + ": 差";
+                }
+                else
+                {
+                    bottomTip("qualityControl.txt文件中的内容不是2行，请改正，然后重启程序");
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                File.WriteAllLines(filepath, ["0.010", "0.020"], Encoding.UTF8);
+                bottomTip("qualityControl.txt文件不存在，已重新创建，并使用了默认值0.2和0.5");
+            }
         }
 
         private void openPortButton_Click(object sender, EventArgs e)
@@ -56,13 +83,13 @@ namespace LaserDistance
                 try
                 {
                     port.Open();
-                    toolStripStatusLabel1.Text = selectedPort + "已成功打开";
+                    bottomTip(selectedPort + "已成功打开");
 
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    toolStripStatusLabel1.Text = selectedPort + "打开失败";
+                    bottomTip(selectedPort + "打开失败");
                 }
                 //finally
                 //{
@@ -71,7 +98,7 @@ namespace LaserDistance
             }
             else
             {
-                toolStripStatusLabel1.Text = "请选择COM号和波特率";
+                bottomTip("请选择COM号和波特率");
             }
         }
 
@@ -79,9 +106,9 @@ namespace LaserDistance
         {
             if (port != null && port.IsOpen)
             {
-                for (byte i = 0; i < 6; i = (byte)(i + 1))
+                for (byte i = 0; i < 6; i++)
                 {
-                    dist[i] = SendAndReceive(i, port);
+                    dist[i] = SendAndReceive((byte)(i+1), getDistance, port);
                 }
 
                 current_textBox1.Text = dist[0].ToString("F3");
@@ -93,7 +120,7 @@ namespace LaserDistance
 
                 if (isZeroSet == false)
                 {
-                    toolStripStatusLabel1.Text = "尚未设置零点，无法计算方差";
+                    bottomTip("尚未设置零点，无法计算方差");
                     return;
                 }
 
@@ -114,11 +141,11 @@ namespace LaserDistance
 
                 average = sum / 6.0f;
                 variance = varianceSum / 6.0f;
-                if (variance < 0.2)
+                if (variance < qualityControl1)
                 {
                     variance_textBox.BackColor = Color.Green;
                 }
-                else if (variance < 0.5)
+                else if (variance < qualityControl2)
                 {
                     variance_textBox.BackColor = Color.Yellow;
                 }
@@ -132,14 +159,14 @@ namespace LaserDistance
             }
             else
             {
-                toolStripStatusLabel1.Text = "COM口尚未打开";
+                bottomTip("COM口尚未打开");
             }
         }
 
-        static float SendAndReceive(byte address, SerialPort port)
+        static float SendAndReceive(byte address, byte[] sendData, SerialPort port)
         {
             // 发送数据
-            byte[] sendData = { address, 0x04, 0x00, 0x00, 0x00, 0x02 };
+            sendData[0] = address;
             byte[] crc = CalculateCRC(sendData);
             byte[] sendDataWithCRC = new byte[sendData.Length + crc.Length];
             Array.Copy(sendData, sendDataWithCRC, sendData.Length);
@@ -151,7 +178,15 @@ namespace LaserDistance
 
             // 接收数据
             byte[] receivedData = new byte[9];
-            port.Read(receivedData, 0, receivedData.Length);
+            port.ReadTimeout = 100; // 设置读取超时时间为100毫秒
+            try
+            {
+                port.Read(receivedData, 0, receivedData.Length);
+            }
+            catch (TimeoutException)
+            {
+                return 0.0f; // 返回一个默认值或处理超时情况
+            }
 
             // 验证接收到的数据的CRC校验码
             byte[] Calculated_CRC = CalculateCRC(receivedData, 0, receivedData.Length - 2);
@@ -162,7 +197,14 @@ namespace LaserDistance
                 if (crcMatch == false)
                 {
                     port.Write(sendDataWithCRC, 0, sendDataWithCRC.Length);
-                    port.Read(receivedData, 0, receivedData.Length);
+                    try
+                    {
+                        port.Read(receivedData, 0, receivedData.Length);
+                    }
+                    catch (TimeoutException)
+                    {
+                        return 0.0f; 
+                    }
                     Calculated_CRC = CalculateCRC(receivedData, 0, receivedData.Length - 2);
                     receivedCRCBytes = [receivedData[7], receivedData[8]];
                     crcMatch = (Calculated_CRC[0] == receivedCRCBytes[0] && Calculated_CRC[1] == receivedCRCBytes[1]);
@@ -229,9 +271,9 @@ namespace LaserDistance
             {
                 if (port.IsOpen)
                 {
-                    for (byte i = 0; i < 6; i = (byte)(i + 1))
+                    for (byte i = 0; i < 6; i++)
                     {
-                        zero[i] = SendAndReceive(i, port);
+                        zero[i] = SendAndReceive((byte)(i + 1), getDistance, port);
                     }
 
                     zero_textBox1.Text = zero[0].ToString("F3");
@@ -242,12 +284,12 @@ namespace LaserDistance
                     zero_textBox6.Text = zero[5].ToString("F3");
 
                     isZeroSet = true;
-                    toolStripStatusLabel1.Text = "已成功设置零点";
+                    bottomTip("已成功设置零点");
                 }
             }
             else
             {
-                toolStripStatusLabel1.Text = "COM口尚未打开，无法设置零点";
+                bottomTip("COM口尚未打开，无法设置零点");
             }
         }
 
@@ -255,6 +297,11 @@ namespace LaserDistance
         {
             Form_help helpForm = new Form_help();
             helpForm.Show();
+        }
+
+        private void bottomTip(string tipString)
+        {
+            toolStripStatusLabel1.Text = tipString;
         }
     }
 }

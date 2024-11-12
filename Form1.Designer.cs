@@ -32,7 +32,7 @@
             label1 = new Label();
             COM_comboBox = new ComboBox();
             openPortButton = new Button();
-            label2 = new Label();
+            baudRate_label = new Label();
             baudRate_comboBox = new ComboBox();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
@@ -81,12 +81,17 @@
             label20 = new Label();
             label21 = new Label();
             label22 = new Label();
-            qualityJudge_textBox = new TextBox();
             average_textBox = new TextBox();
             variance_textBox = new TextBox();
             timer1 = new System.Windows.Forms.Timer(components);
             label23 = new Label();
             help_button = new Button();
+            groupBox7 = new GroupBox();
+            quality_label3 = new Label();
+            quality_label2 = new Label();
+            quality_label1 = new Label();
+            toolTip1 = new ToolTip(components);
+            label2 = new Label();
             statusStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -94,6 +99,7 @@
             groupBox4.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox6.SuspendLayout();
+            groupBox7.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -123,14 +129,14 @@
             openPortButton.UseVisualStyleBackColor = true;
             openPortButton.Click += openPortButton_Click;
             // 
-            // label2
+            // baudRate_label
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(188, 16);
-            label2.Name = "label2";
-            label2.Size = new Size(56, 17);
-            label2.TabIndex = 3;
-            label2.Text = "波特率：";
+            baudRate_label.AutoSize = true;
+            baudRate_label.Location = new Point(188, 16);
+            baudRate_label.Name = "baudRate_label";
+            baudRate_label.Size = new Size(56, 17);
+            baudRate_label.TabIndex = 3;
+            baudRate_label.Text = "波特率：";
             // 
             // baudRate_comboBox
             // 
@@ -156,9 +162,9 @@
             // 
             // setZero_button
             // 
-            setZero_button.Location = new Point(13, 81);
+            setZero_button.Location = new Point(13, 77);
             setZero_button.Name = "setZero_button";
-            setZero_button.Size = new Size(143, 23);
+            setZero_button.Size = new Size(143, 32);
             setZero_button.TabIndex = 6;
             setZero_button.Text = "将当前读数设为零点";
             setZero_button.UseVisualStyleBackColor = true;
@@ -616,14 +622,6 @@
             label22.TabIndex = 11;
             label22.Text = "差值的方差";
             // 
-            // qualityJudge_textBox
-            // 
-            qualityJudge_textBox.Location = new Point(332, 291);
-            qualityJudge_textBox.Multiline = true;
-            qualityJudge_textBox.Name = "qualityJudge_textBox";
-            qualityJudge_textBox.Size = new Size(152, 89);
-            qualityJudge_textBox.TabIndex = 12;
-            // 
             // average_textBox
             // 
             average_textBox.Font = new Font("Microsoft YaHei UI", 15F);
@@ -653,9 +651,11 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new Point(308, 383);
+            label23.BackColor = SystemColors.ActiveCaption;
+            label23.BorderStyle = BorderStyle.FixedSingle;
+            label23.Location = new Point(305, 383);
             label23.Name = "label23";
-            label23.Size = new Size(200, 17);
+            label23.Size = new Size(202, 19);
             label23.TabIndex = 14;
             label23.Text = "Developed By HKUST(GZ) MDMF";
             // 
@@ -669,16 +669,65 @@
             help_button.UseVisualStyleBackColor = true;
             help_button.Click += help_button_Click;
             // 
+            // groupBox7
+            // 
+            groupBox7.Controls.Add(quality_label3);
+            groupBox7.Controls.Add(quality_label2);
+            groupBox7.Controls.Add(quality_label1);
+            groupBox7.Location = new Point(365, 287);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new Size(130, 93);
+            groupBox7.TabIndex = 17;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "方差与品质对照表";
+            // 
+            // quality_label3
+            // 
+            quality_label3.AutoSize = true;
+            quality_label3.Location = new Point(13, 67);
+            quality_label3.Name = "quality_label3";
+            quality_label3.Size = new Size(50, 17);
+            quality_label3.TabIndex = 0;
+            quality_label3.Text = "label24";
+            // 
+            // quality_label2
+            // 
+            quality_label2.AutoSize = true;
+            quality_label2.Location = new Point(13, 46);
+            quality_label2.Name = "quality_label2";
+            quality_label2.Size = new Size(50, 17);
+            quality_label2.TabIndex = 0;
+            quality_label2.Text = "label24";
+            // 
+            // quality_label1
+            // 
+            quality_label1.AutoSize = true;
+            quality_label1.Location = new Point(13, 25);
+            quality_label1.Name = "quality_label1";
+            quality_label1.Size = new Size(50, 17);
+            quality_label1.TabIndex = 0;
+            quality_label1.Text = "label24";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(157, 85);
+            label2.Name = "label2";
+            label2.Size = new Size(256, 17);
+            label2.TabIndex = 18;
+            label2.Text = "(请先放置标准平板，再点击左侧的设零点按钮)";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(510, 428);
+            Controls.Add(label2);
+            Controls.Add(groupBox7);
             Controls.Add(help_button);
             Controls.Add(label23);
             Controls.Add(variance_textBox);
             Controls.Add(average_textBox);
-            Controls.Add(qualityJudge_textBox);
             Controls.Add(label22);
             Controls.Add(label21);
             Controls.Add(groupBox6);
@@ -690,7 +739,7 @@
             Controls.Add(setZero_button);
             Controls.Add(statusStrip1);
             Controls.Add(baudRate_comboBox);
-            Controls.Add(label2);
+            Controls.Add(baudRate_label);
             Controls.Add(openPortButton);
             Controls.Add(COM_comboBox);
             Controls.Add(label1);
@@ -712,6 +761,8 @@
             groupBox5.PerformLayout();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -721,7 +772,7 @@
         private Label label1;
         private ComboBox COM_comboBox;
         private Button openPortButton;
-        private Label label2;
+        private Label baudRate_label;
         private ComboBox baudRate_comboBox;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
@@ -770,11 +821,16 @@
         private Label label20;
         private Label label21;
         private Label label22;
-        private TextBox qualityJudge_textBox;
         private TextBox average_textBox;
         private TextBox variance_textBox;
         private System.Windows.Forms.Timer timer1;
         private Label label23;
         private Button help_button;
+        private GroupBox groupBox7;
+        private Label quality_label3;
+        private Label quality_label2;
+        private Label quality_label1;
+        private ToolTip toolTip1;
+        private Label label2;
     }
 }

@@ -33,13 +33,15 @@
             label2 = new Label();
             label3 = new Label();
             pictureBox1 = new PictureBox();
+            label4 = new Label();
+            label5 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(20, 22);
+            label1.Location = new Point(9, 9);
             label1.Name = "label1";
             label1.Size = new Size(237, 17);
             label1.TabIndex = 0;
@@ -48,7 +50,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(21, 50);
+            label2.Location = new Point(9, 33);
             label2.Name = "label2";
             label2.Size = new Size(224, 17);
             label2.TabIndex = 0;
@@ -57,7 +59,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(21, 78);
+            label3.Location = new Point(9, 57);
             label3.Name = "label3";
             label3.Size = new Size(308, 17);
             label3.TabIndex = 0;
@@ -66,19 +68,39 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(9, 98);
+            pictureBox1.Location = new Point(9, 108);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(512, 520);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(478, 637);
+            label4.Name = "label4";
+            label4.Size = new Size(70, 17);
+            label4.TabIndex = 2;
+            label4.Text = "(By 蒋力夫)";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(9, 81);
+            label5.Name = "label5";
+            label5.Size = new Size(324, 17);
+            label5.TabIndex = 0;
+            label5.Text = "4.如果不知道要不要改波特率，请保持默认值115200不变。";
+            // 
             // Form_help
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(556, 630);
+            ClientSize = new Size(556, 658);
+            Controls.Add(label4);
             Controls.Add(pictureBox1);
+            Controls.Add(label5);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -95,5 +117,7 @@
         private Label label2;
         private Label label3;
         private PictureBox pictureBox1;
+        private Label label4;
+        private Label label5;
     }
 }
