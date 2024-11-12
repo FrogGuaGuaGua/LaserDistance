@@ -79,12 +79,10 @@ namespace LaserDistance
         {
             if (port != null && port.IsOpen)
             {
-                dist[0] = SendAndReceive(0x01, port);
-                dist[1] = SendAndReceive(0x02, port);
-                dist[2] = SendAndReceive(0x03, port);
-                dist[3] = SendAndReceive(0x04, port);
-                dist[4] = SendAndReceive(0x05, port);
-                dist[5] = SendAndReceive(0x06, port);
+                for (byte i = 0; i < 6; i = (byte)(i + 1))
+                {
+                    dist[i] = SendAndReceive(i, port);
+                }
 
                 current_textBox1.Text = dist[0].ToString("F3");
                 current_textBox2.Text = dist[1].ToString("F3");
@@ -231,12 +229,10 @@ namespace LaserDistance
             {
                 if (port.IsOpen)
                 {
-                    zero[0] = SendAndReceive(0x01, port);
-                    zero[1] = SendAndReceive(0x02, port);
-                    zero[2] = SendAndReceive(0x03, port);
-                    zero[3] = SendAndReceive(0x04, port);
-                    zero[4] = SendAndReceive(0x05, port);
-                    zero[5] = SendAndReceive(0x06, port);
+                    for (byte i = 0; i < 6; i = (byte)(i + 1))
+                    {
+                        zero[i] = SendAndReceive(i, port);
+                    }
 
                     zero_textBox1.Text = zero[0].ToString("F3");
                     zero_textBox2.Text = zero[1].ToString("F3");
