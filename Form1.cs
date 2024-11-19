@@ -48,7 +48,7 @@ namespace LaserDistance
 
             toolTip1.SetToolTip(baudRate_label, "如果不知道要不要改波特率，那就保持默认值115200");
 
-            string filepath = Environment.CurrentDirectory + "qualityControl.txt";
+            string filepath = Environment.CurrentDirectory + "\\qualityControl.txt";
             try
             {
                 string[] readText = File.ReadAllLines(filepath, Encoding.UTF8);
